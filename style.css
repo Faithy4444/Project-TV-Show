@@ -1,3 +1,31 @@
 #root {
-  color: red;
+  color: black;
+  display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center; 
+      padding: 20px;
+}
+
+.episode{
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  width: 250px;
+  flex-grow: 1;
+  height: 450px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.episode img {
+  border-radius: 10px;
+}
+.episode p {
+  overflow: auto;
+  text-align: left;
+  
+  
 }
