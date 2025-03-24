@@ -4,6 +4,7 @@ const searchArea = document.getElementById("search");
 
 //creating and appending the search input
 const searchInput = document.createElement("input");
+searchInput.classList.add("searchInput");
 searchInput.type = "search";
 searchInput.placeholder = "Search here .....";
 searchArea.appendChild(searchInput);
