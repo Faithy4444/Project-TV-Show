@@ -9,6 +9,15 @@ searchInput.type = "search";
 searchInput.placeholder = "Search here .....";
 searchArea.appendChild(searchInput);
 
+//creating and appending the select dropdown
+const selectOption = document.createElement("select");
+searchArea.appendChild(selectOption);
+
+//creating a span for episode count
+const episodeCount = document.createElement("span");
+episodeCount.style.marginLeft = "10px";
+searchArea.appendChild(episodeCount);
+
 function setup() {
   const allEpisodes = getAllEpisodes();
   makePageForEpisodes(allEpisodes);
@@ -17,8 +26,6 @@ function setup() {
 
 function makePageForEpisodes(episodeList) {
   rootElem.innerHTML = "";
-
-  //rootElem.textContent = `Got ${episodeList.length} episode(s)`;
 
   for (let episode of episodeList) {
     let elementContents = document.createElement("div");
