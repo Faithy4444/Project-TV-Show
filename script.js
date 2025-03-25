@@ -21,6 +21,8 @@ searchArea.appendChild(episodeCount);
 function setup() {
   const allEpisodes = getAllEpisodes();
   makePageForEpisodes(allEpisodes);
+  populateDropdown(allEpisodes);
+
   searchInput.addEventListener("input", () => filterEpisodes(allEpisodes));
 }
 
@@ -47,4 +49,18 @@ function filterEpisodes(episodeList) {
   );
   makePageForEpisodes(filteredEpisodes);
 }
+
+//This is a function to populate the dropdown list
+function populateDropdown(episodeList) {
+  selectOption.innerHTML = `<option value="all">All Episodes</option>`;
+  episodeList.forEach((episode) => {
+    const option = document.createElement("option");
+    option.value = episode.name;
+    option.textContent = `S${String(episode.season).padStart(2, "0")}E${String(
+      episode.number
+    ).padStart(2, "0")} - ${episode.name}`;
+    selectOption.appendChild(option);
+  });
+}
+
 window.onload = setup;
