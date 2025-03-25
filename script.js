@@ -2,16 +2,21 @@
 const rootElem = document.getElementById("root");
 const searchArea = document.getElementById("search");
 
+//Creating a container for the searchInput and the drop down list
+const searchContainer = document.createElement("div");
+searchContainer.classList.add("search-container");
+searchArea.appendChild(searchContainer);
+
 //creating and appending the search input
 const searchInput = document.createElement("input");
 searchInput.classList.add("searchInput");
 searchInput.type = "search";
 searchInput.placeholder = "Search here .....";
-searchArea.appendChild(searchInput);
+searchContainer.appendChild(searchInput);
 
 //creating and appending the select dropdown
 const selectOption = document.createElement("select");
-searchArea.appendChild(selectOption);
+searchContainer.appendChild(selectOption);
 
 //creating a span for episode count
 const episodeCount = document.createElement("span");
@@ -23,10 +28,15 @@ function setup() {
   makePageForEpisodes(allEpisodes);
   populateDropdown(allEpisodes);
 
-  selectOption.addEventListener("change", () =>
-    filterByDropDownSelection(allEpisodes)
-  );
-  searchInput.addEventListener("input", () => filterEpisodes(allEpisodes));
+  searchInput.addEventListener("input", () => {
+    filterEpisodes(allEpisodes);
+    updateDropdown(allEpisodes);
+  });
+
+  selectOption.addEventListener("change", () => {
+    filterByDropDownSelection(allEpisodes);
+    searchInput.value = "";
+  });
 }
 
 function makePageForEpisodes(episodeList) {
@@ -77,5 +87,17 @@ function filterByDropDownSelection(episodeList) {
     makePageForEpisodes(selectedEpisode ? [selectedEpisode] : []);
   }
 }
+
+const updateDropdown = (filteredEpisodes) => {
+  selectOption.innerHTML = `<option value="all">All Episodes</option>`;
+  filteredEpisodes.forEach((episode) => {
+    const option = document.createElement("option");
+    option.value = episode.name;
+    option.textContent = `S${String(episode.season).padStart(2, "0")}E${String(
+      episode.number
+    ).padStart(2, "0")} - ${episode.name}`;
+    selectOption.appendChild(option);
+  });
+};
 
 window.onload = setup;
