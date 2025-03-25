@@ -23,6 +23,9 @@ function setup() {
   makePageForEpisodes(allEpisodes);
   populateDropdown(allEpisodes);
 
+  selectOption.addEventListener("change", () =>
+    filterByDropDownSelection(allEpisodes)
+  );
   searchInput.addEventListener("input", () => filterEpisodes(allEpisodes));
 }
 
@@ -61,6 +64,18 @@ function populateDropdown(episodeList) {
     ).padStart(2, "0")} - ${episode.name}`;
     selectOption.appendChild(option);
   });
+}
+// This is a function to filter the list by dropdown selection
+function filterByDropDownSelection(episodeList) {
+  const selectedValue = selectOption.value;
+  if (selectedValue === "all") {
+    makePageForEpisodes(episodeList);
+  } else {
+    const selectedEpisode = episodeList.find(
+      (episode) => episode.name == selectedValue
+    );
+    makePageForEpisodes(selectedEpisode ? [selectedEpisode] : []);
+  }
 }
 
 window.onload = setup;
