@@ -1,13 +1,13 @@
 #root {
   color: black;
   display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center; 
-      padding: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
 }
 
-.episode{
+.episode {
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -26,6 +26,43 @@
 .episode p {
   overflow: auto;
   text-align: left;
-  
-  
+}
+
+.searchInput {
+  padding: 20px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  width: 250px;
+  color: rgb(23, 22, 22);
+  font-size: 1.1em;
+  height: 50px;
+  cursor: pointer;
+}
+.search-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+
+select {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.episodeCount {
+  border: none;
+  width: 600px;
+  padding: 20px;
 }
