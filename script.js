@@ -138,6 +138,4 @@ const updateDropdown = (filteredEpisodes) => {
 function updateEpisodeCount(matchedCount, totalCount) {
   episodeCount.textContent = `Displaying ${matchedCount}/ ${totalCount}episodes`;
 }
-
-ggrthth
 window.onload = setup;
