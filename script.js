@@ -21,5 +21,4 @@ function makePageForEpisodes(episodeList) {
   //rootElem.textContent = `Got ${episodeList.length} episode(s)`;
 }
 
-ggrthth
 window.onload = setup;
