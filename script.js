@@ -16,12 +16,6 @@ function getAllEpisodes() {
   return[]
 })
 }
-getAllEpisodes().then(function(episodes){
-  console.log(episodes)
-  return episodeList.push(...episodes)
-
-})
-
 /*****************************************************************
 Functions to display error message and loading message
  *****************************************************************/
@@ -74,7 +68,7 @@ function setup() {
   updateEpisodeCount(allEpisodes.length, allEpisodes.length);
 
   searchInput.addEventListener("input", () => {
-    filterEpisodes(allEpisodes);
+    const filteredEpisodes = filterEpisodes(allEpisodes);
     updateDropdown(allEpisodes);
     updateEpisodeCount(filteredEpisodes.length, allEpisodes.length);
   });
