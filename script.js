@@ -1,4 +1,7 @@
 //You can edit ALL of the code here
+/*****************************************************************
+Fetching Data
+ *****************************************************************/
 episodeList = []
 function getAllEpisodes() {
  return fetch("https://api.tvmaze.com/shows/82/episodes")
@@ -20,7 +23,7 @@ getAllEpisodes().then(function(episodes){
 })
 
 /*****************************************************************
-Funtions to display error message and loading message
+Functions to display error message and loading message
  *****************************************************************/
 function displayLoadingMessage(message) {
   rootElem.innerHTML = `<p class='message'>${message}</p>`;
