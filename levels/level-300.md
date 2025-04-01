@@ -6,9 +6,9 @@ You should have merged someone else's level 200 implementation.
 
 Once again, compare their implementation to yours. Think:
 1. How is it different?
-2. What do you prefer about your implementation?
-3. What do you prefer about their implementation?
-4. What did you learn that you didn't know before?
+2. What do you prefer about your implementation?My inplimentation includes both DOM and HTML making it easy to understand the structure of the code just by looking at the HTML.
+3. What do you prefer about their implementation?it is neat and well structured
+4. What did you learn that you didn't know before? different codes can do the exact same thing
 
 Have a discussion about your answers to these questions. In class, together, give a 3 minute talk about your conclusions.
 

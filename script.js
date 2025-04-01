@@ -1,4 +1,35 @@
 //You can edit ALL of the code here
+episodeList = []
+function getAllEpisodes() {
+ return fetch("https://api.tvmaze.com/shows/82/episodes")
+.then(function(data){
+  if(!data.ok){
+    throw new Error("Failed to fetch episodes.")
+  }
+  return data.json()
+})
+.catch(error => {
+  displayErrorMessage("Error occurred while fetching. Please try again")
+  return[]
+})
+}
+getAllEpisodes().then(function(episodes){
+  console.log(episodes)
+  return episodeList.push(...episodes)
+
+})
+
+/*****************************************************************
+Funtions to display error message and loading message
+ *****************************************************************/
+function displayLoadingMessage(message) {
+  rootElem.innerHTML = `<p class='message'>${message}</p>`;
+}
+
+function displayErrorMessage(message) {
+  rootElem.innerHTML = `<p class='error'>${message}</p>`;
+}
+
 const rootElem = document.getElementById("root");
 const searchArea = document.getElementById("search");
 
@@ -33,8 +64,9 @@ episodeCount.style.marginLeft = "10px";
 searchContainer.appendChild(episodeCount);
 
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+  displayLoadingMessage("Episodes loading please wait...")
+  getAllEpisodes().then((allEpisodes) => {
+  renderEpisodes(allEpisodes);
   populateDropdown(allEpisodes);
   updateEpisodeCount(allEpisodes.length, allEpisodes.length);
 
@@ -48,9 +80,10 @@ function setup() {
     filterByDropDownSelection(allEpisodes);
     searchInput.value = "";
   });
+});
 }
 
-function makePageForEpisodes(episodeList) {
+function renderEpisodes(episodeList) {
 
   rootElem.innerHTML = "";
 
@@ -77,7 +110,7 @@ const filterEpisodes = (episodeList) => {
       episode.name.toLowerCase().includes(searchTerm) ||
       episode.summary.toLowerCase().includes(searchTerm)
   );
-  makePageForEpisodes(filteredEpisodes);
+  renderEpisodes(filteredEpisodes);
   updateEpisodeCount(filteredEpisodes.length, episodeList.length);
   return filteredEpisodes;
 };
@@ -105,13 +138,13 @@ const populateDropdown = (episodeList) => {
 const filterByDropDownSelection = (episodeList) => {
   const selectedValue = selectOption.value;
   if (selectedValue === "all") {
-    makePageForEpisodes(episodeList);
+    renderEpisodes(episodeList);
     updateEpisodeCount(episodeList.length, episodeList.length);
   } else {
     const selectedEpisode = episodeList.find(
       (episode) => episode.name == selectedValue
     );
-    makePageForEpisodes(selectedEpisode ? [selectedEpisode] : []);
+    renderEpisodes(selectedEpisode ? [selectedEpisode] : []);
     updateEpisodeCount(selectedEpisode ? 1 : 0, episodeList.length);
   }
 };
