@@ -1,20 +1,49 @@
 //You can edit ALL of the code here
+
 /*****************************************************************
 Fetching Data
  *****************************************************************/
-episodeList = []
-function getAllEpisodes() {
- return fetch("https://api.tvmaze.com/shows/82/episodes")
-.then(function(data){
-  if(!data.ok){
-    throw new Error("Failed to fetch episodes.")
+let allShows = [];
+
+async function fetchAllShows() {
+  try {
+    displayLoadingMessage("Loading shows...");
+    const res = await fetch("https://api.tvmaze.com/shows");
+    const data = await res.json();
+
+    allShows = data.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+    populateShowDropdown(allShows);
+    //renderEpisodes(allShows);
+    displayLoadingMessage("Please select a show");
+  } catch (err) {
+    displayErrorMessage("Error loading shows");
   }
-  return data.json()
-})
-.catch(error => {
-  displayErrorMessage("Error occurred while fetching. Please try again")
-  return[]
-})
+}
+
+const populateShowDropdown = (shows) => {
+  showSelect.innerHTML = `<option value="">Select a Show</option>`;
+  shows.forEach((show) => {
+    const option = document.createElement("option");
+    option.value = show.id;
+    option.textContent = show.name;
+    showSelect.appendChild(option);
+  });
+};
+episodeList = [];
+function getAllEpisodes(showId) {
+  return fetch(`https://api.tvmaze.com/shows/${showId}/episodes`)
+    .then(function (data) {
+      if (!data.ok) {
+        throw new Error("Failed to fetch episodes.");
+      }
+      return data.json();
+    })
+    .catch((error) => {
+      displayErrorMessage("Error occurred while fetching. Please try again");
+      return [];
+    });
 }
 /*****************************************************************
 Functions to display error message and loading message
@@ -42,6 +71,8 @@ searchArea.appendChild(searchContainer);
  *********************************************/
 const selectOption = document.createElement("select");
 searchContainer.appendChild(selectOption);
+const showSelect = document.createElement("select");
+searchContainer.insertBefore(showSelect, selectOption);
 
 /***************************************************
  creating and appending the search input
@@ -61,34 +92,42 @@ episodeCount.style.marginLeft = "10px";
 searchContainer.appendChild(episodeCount);
 
 function setup() {
-  displayLoadingMessage("Episodes loading please wait...")
-  getAllEpisodes().then((allEpisodes) => {
-  renderEpisodes(allEpisodes);
-  populateDropdown(allEpisodes);
-  updateEpisodeCount(allEpisodes.length, allEpisodes.length);
+  fetchAllShows();
 
-  searchInput.addEventListener("input", () => {
-    const filteredEpisodes = filterEpisodes(allEpisodes);
-    updateDropdown(allEpisodes);
-    updateEpisodeCount(filteredEpisodes.length, allEpisodes.length);
-  });
+  showSelect.addEventListener("change", () => {
+    const selectedShowId = showSelect.value;
+    if (selectedShowId) {
+      displayLoadingMessage("Episodes loading please wait...");
+      getAllEpisodes(selectedShowId).then((allEpisodes) => {
+        renderEpisodes(allEpisodes);
+        populateDropdown(allEpisodes);
+        updateEpisodeCount(allEpisodes.length, allEpisodes.length);
 
-  selectOption.addEventListener("change", () => {
-    filterByDropDownSelection(allEpisodes);
-    searchInput.value = "";
+        searchInput.addEventListener("input", () => {
+          const filteredEpisodes = filterEpisodes(allEpisodes);
+          updateDropdown(allEpisodes);
+          updateEpisodeCount(filteredEpisodes.length, allEpisodes.length);
+        });
+
+        selectOption.addEventListener("change", () => {
+          filterByDropDownSelection(allEpisodes);
+          searchInput.value = "";
+        });
+      });
+    }
   });
-});
 }
 
 function renderEpisodes(episodeList) {
-
   rootElem.innerHTML = "";
 
   for (let episode of episodeList) {
     let elementContents = document.createElement("div");
     elementContents.classList.add("episode");
 
-    elementContents.innerHTML = `<h4>${episode.name}- S${episode.season.toString().padStart(2, "0")}-E${episode.number.toString().padStart(2, "0")}</h4>
+    elementContents.innerHTML = `<h4>${episode.name}- S${episode.season
+      .toString()
+      .padStart(2, "0")}-E${episode.number.toString().padStart(2, "0")}</h4>
 
     <img  src ="${episode.image.medium}" alt = "${episode.name}">
     <p>${episode.summary}</p>`;
