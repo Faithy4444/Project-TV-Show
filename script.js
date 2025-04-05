@@ -8,15 +8,16 @@ let allShows = [];
 async function fetchAllShows() {
   try {
     displayLoadingMessage("Loading shows...");
-    const res = await fetch("https://api.tvmaze.com/shows");
-    const data = await res.json();
+    const response = await fetch("https://api.tvmaze.com/shows");
+    const data = await response.json();
 
     allShows = data.sort((a, b) =>
       a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
     );
     populateShowDropdown(allShows);
+    console.log(allShows)
+    renderHomePage(allShows)
     //renderEpisodes(allShows);
-    displayLoadingMessage("Please select a show");
   } catch (err) {
     displayErrorMessage("Error loading shows");
   }
@@ -200,6 +201,23 @@ const updateDropdown = (filteredEpisodes) => {
   });
 };
 
+
+/*********************************************************************************************
+ Function to render homepage
+ ************************************************************************************************/
+const renderHomePage =(shows) => {
+  rootElem.innerHTML = ""
+
+  shows.forEach((show)=>{
+    let showContainer = document.createElement("div")
+    let ratingsContainer = document.createElement("div")
+    showContainer.innerHTML = `<img src ="${show.image.medium}"><h1>${show.name}</h1> <p>${show.summary}</p>`
+ratingsContainer.innerHTML = `<h5>Rated: </h5>${show.rating.average}<h5>Genre: ${show.genre}</h5><h5>Status: ${show.status}</h5><h5>Runtime: ${show.runtime}</h5>`
+    showContainer.appendChild(ratingsContainer)
+    rootElem.appendChild(showContainer)
+  })
+  
+}
 /*********************************************************************************************
  Function to count the number of episodes 
  ************************************************************************************************/
