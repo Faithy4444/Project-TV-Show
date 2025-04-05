@@ -208,13 +208,28 @@ const updateDropdown = (filteredEpisodes) => {
 const renderHomePage =(shows) => {
   rootElem.innerHTML = ""
 
+  function createElementWithClass(tagName, className) {
+    const element = document.createElement(tagName);
+    element.classList.add(className);
+    return element;
+  }
+
   shows.forEach((show)=>{
-    let showContainer = document.createElement("div")
-    let ratingsContainer = document.createElement("div")
-    showContainer.innerHTML = `<img src ="${show.image.medium}"><h1>${show.name}</h1> <p>${show.summary}</p>`
-ratingsContainer.innerHTML = `<h5>Rated: </h5>${show.rating.average}<h5>Genre: ${show.genre}</h5><h5>Status: ${show.status}</h5><h5>Runtime: ${show.runtime}</h5>`
-    showContainer.appendChild(ratingsContainer)
-    rootElem.appendChild(showContainer)
+    let showContainer = createElementWithClass("div", "show-container");
+    let imageContainer = createElementWithClass("div", "image-container");
+    let contentContainer = createElementWithClass("div", "summary-container");
+    let ratingsContainer = createElementWithClass("div", "ratings-container");
+
+    
+    
+  
+    imageContainer.innerHTML = `<img src ="${show.image.medium}">`
+    contentContainer.innerHTML = `<h1>${show.name}</h1><p>${show.summary}</p>`
+    ratingsContainer.innerHTML = `<h5>Rated: </h5>${show.rating.average}<h5>Genre: ${show.genre}</h5><h5>Status: ${show.status}</h5><h5>Runtime: ${show.runtime}</h5>`
+    showContainer.appendChild(imageContainer);
+    showContainer.appendChild(contentContainer);
+    showContainer.appendChild(ratingsContainer);
+    rootElem.appendChild(showContainer);
   })
   
 }
