@@ -69,6 +69,8 @@ searchArea.appendChild(searchContainer);
  *********************************************/
 const selectOption = document.createElement("select");
 searchContainer.appendChild(selectOption);
+const showSelect = document.createElement("select");
+searchContainer.insertBefore(showSelect, selectOption);
 
 /***************************************************
  creating and appending the search input
@@ -88,8 +90,13 @@ episodeCount.style.marginLeft = "10px";
 searchContainer.appendChild(episodeCount);
 
 function setup() {
-  displayLoadingMessage("Episodes loading please wait...")
-  getAllEpisodes().then((allEpisodes) => {
+  fetchAllShows();
+
+  showSelect.addEventListener("change", () => {
+    const selectedShowId = showSelect.value;
+    if (selectedShowId) {
+      displayLoadingMessage("Episodes loading please wait...");
+      getAllEpisodes(selectedShowId).then((allEpisodes) => {
   renderEpisodes(allEpisodes);
   populateDropdown(allEpisodes);
   updateEpisodeCount(allEpisodes.length, allEpisodes.length);
