@@ -15,6 +15,7 @@ async function fetchAllShows() {
       a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
     );
     populateShowDropdown(allShows);
+    //renderEpisodes(allShows);
     displayLoadingMessage("Please select a show");
   } catch (err) {
     displayErrorMessage("Error loading shows");
