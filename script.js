@@ -2,14 +2,41 @@
 /*****************************************************************
 Fetching Data
  *****************************************************************/
-episodeList = []
-function getAllEpisodes() {
- return fetch("https://api.tvmaze.com/shows/82/episodes")
-.then(function(data){
-  if(!data.ok){
-    throw new Error("Failed to fetch episodes.")
+let allShows = [];
+
+async function fetchAllShows() {
+  try {
+    displayLoadingMessage("Loading shows...");
+    const res = await fetch("https://api.tvmaze.com/shows");
+    const data = await res.json();
+
+    allShows = data.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+    populateShowDropdown(allShows);
+    displayLoadingMessage("Please select a show");
+  } catch (err) {
+    displayErrorMessage("Error loading shows");
   }
-  return data.json()
+}
+
+const populateShowDropdown = (shows) => {
+  showSelect.innerHTML = `<option value="">Select a Show</option>`;
+  shows.forEach((show) => {
+    const option = document.createElement("option");
+    option.value = show.id;
+    option.textContent = show.name;
+    showSelect.appendChild(option);
+  });
+};
+episodeList = [];
+function getAllEpisodes(showId) {
+  return fetch(`https://api.tvmaze.com/shows/${showId}/episodes`)
+    .then(function (data) {
+      if (!data.ok) {
+        throw new Error("Failed to fetch episodes.");
+  }
+      return data.json();
 })
 .catch(error => {
   displayErrorMessage("Error occurred while fetching. Please try again")
