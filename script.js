@@ -24,7 +24,7 @@ async function fetchAllShows() {
 }
 
 const populateShowDropdown = (shows) => {
-  showSelect.innerHTML = `<option value="">Select a Show</option>`;
+  showSelect.innerHTML = `<option value="">All shows</option>`;
   shows.forEach((show) => {
     const option = document.createElement("option");
     option.value = show.id;
@@ -94,24 +94,37 @@ searchContainer.appendChild(episodeCount);
 
 function setup() {
   fetchAllShows();
+  searchInput.addEventListener("input",()=>{
+    const selectedShowId = showSelect.value
+
+    if(!selectedShowId){
+      filterShows(allShows)
+    }else{
+      const filteredEpisodes = filterEpisodes(currentEpisodes)
+      updateDropdown(filterEpisodes)
+      updateEpisodeCount(filterEpisodes.length, currentEpisodes.length)
+    }
+  })
 
   showSelect.addEventListener("change", () => {
     const selectedShowId = showSelect.value;
-    if (selectedShowId) {
+    if (!selectedShowId) {
+      renderHomePage(allShows)
+      selectOption.innerHTML = ""
+      episodeCount.textContent = ""
+      searchInput.value = ""
+      return
+    }
+      else{
       displayLoadingMessage("Episodes loading please wait...");
       getAllEpisodes(selectedShowId).then((allEpisodes) => {
+        currentEpisodes = allEpisodes
         renderEpisodes(allEpisodes);
         populateDropdown(allEpisodes);
         updateEpisodeCount(allEpisodes.length, allEpisodes.length);
 
-        searchInput.addEventListener("input", () => {
-          const filteredEpisodes = filterEpisodes(allEpisodes);
-          updateDropdown(allEpisodes);
-          updateEpisodeCount(filteredEpisodes.length, allEpisodes.length);
-        });
-
         selectOption.addEventListener("change", () => {
-          filterByDropDownSelection(allEpisodes);
+          filterByDropDownSelection(currentEpisodes);
           searchInput.value = "";
         });
       });
@@ -225,7 +238,7 @@ const renderHomePage =(shows) => {
   
     imageContainer.innerHTML = `<img src ="${show.image.medium}">`
     contentContainer.innerHTML = `<h1>${show.name}</h1><p>${show.summary}</p>`
-    ratingsContainer.innerHTML = `<h5>Rated: </h5>${show.rating.average}<h5>Genre: ${show.genre}</h5><h5>Status: ${show.status}</h5><h5>Runtime: ${show.runtime}</h5>`
+    ratingsContainer.innerHTML = `<h5>Rated: </h5>${show.rating.average}<h5>Genre: ${show.genres.join("|")}</h5><h5>Status: ${show.status}</h5><h5>Runtime: ${show.runtime}</h5>`
     showContainer.appendChild(imageContainer);
     showContainer.appendChild(contentContainer);
     showContainer.appendChild(ratingsContainer);
@@ -233,11 +246,28 @@ const renderHomePage =(shows) => {
   })
   
 }
+
+/*********************************************************************
+ This is a function to filter shows according to search
+********************************************************************** */
+
+const filterShows = (showList) => {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  console.log(searchTerm);
+  const filteredShows = showList.filter(
+    (show) =>
+      show.name.toLowerCase().includes(searchTerm) ||
+      show.summary.toLowerCase().includes(searchTerm)
+  );
+  renderHomePage(filteredShows);
+  updateEpisodeCount(filteredShows.length, showList.length);
+  return filteredShows;
+};
 /*********************************************************************************************
  Function to count the number of episodes 
  ************************************************************************************************/
 
 function updateEpisodeCount(matchedCount, totalCount) {
-  episodeCount.textContent = `Displaying ${matchedCount}/ ${totalCount}episodes`;
+  episodeCount.textContent = `Displaying ${matchedCount}/ ${totalCount}show(s)/episode(s)`;
 }
 window.onload = setup;
