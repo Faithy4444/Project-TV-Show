@@ -257,7 +257,8 @@ const filterShows = (showList) => {
   const filteredShows = showList.filter(
     (show) =>
       show.name.toLowerCase().includes(searchTerm) ||
-      show.summary.toLowerCase().includes(searchTerm)
+      show.summary.toLowerCase().includes(searchTerm)||
+      show.genres.join(" ").toLowerCase().includes(searchTerm)
   );
   renderHomePage(filteredShows);
   updateEpisodeCount(filteredShows.length, showList.length);
